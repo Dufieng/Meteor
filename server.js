@@ -1,7 +1,8 @@
 const express = require("express");
+const path = require("path");
 const app = express();
 app.use(express.json());
-app.use(express.static("public")); // віддає сайт
+app.use(express.static(path.join(__dirname, "public"))); // віддає сайт
 
 // API
 app.get("/api/data", (req, res) => {

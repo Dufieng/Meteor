@@ -10,31 +10,44 @@
 <h1>My espMeteor</h1>
 <ul id="list"></ul>
 
-<script>
-fetch("/api/data")
-  .then(r => r.json())
-  .then(data => {
-    data.reverse() // щоб час ішов зліва направо
-
-    const labels = data.map(d => d.time)
-    const temps = data.map(d => d.temperature)
-
-    new Chart(document.getElementById("chart"), {
-      type: "line",
-      data: {
-        labels: labels,
-        datasets: [{
-          label: "Температура °C",
-          data: temps
-        }]
-      }
-    })
-  })
-</script>
-
-
-
 <canvas id="chart"></canvas>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  fetch("/api/data")
+    .then(r => {
+      if (!r.ok) throw new Error("API error: " + r.status);
+      return r.json();
+    })
+    .then(data => {
+      data.reverse(); // щоб час ішов зліва направо
+
+      const labels = data.map(d => d.time);
+      const temps = data.map(d => d.temperature);
+
+      const ctx = document.getElementById("chart");
+      if (!ctx) {
+        console.error("Canvas element not found!");
+        return;
+      }
+
+      new Chart(ctx, {
+        type: "line",
+        data: {
+          labels: labels,
+          datasets: [{
+            label: "Температура °C",
+            data: temps
+          }]
+        }
+      });
+    })
+    .catch(error => {
+      console.error("Error loading chart:", error);
+      document.body.innerHTML += "<p style='color:red'>Помилка завантаження даних: " + error.message + "</p>";
+    });
+});
+</script>
 
 
 </body>
