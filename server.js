@@ -1,55 +1,24 @@
-const express = require("express")
-const sqlite3 = require("sqlite3").verbose()
+const express = require("express");
+const app = express();
+app.use(express.json());
+app.use(express.static("public")); // віддає сайт
 
-const app = express()
-app.use(express.json()) // щоб читати JSON
-app.use(express.static("public"))
-
-// 1️⃣ база даних (файл)
-const db = new sqlite3.Database("meteo.db")
-
-// 2️⃣ таблиця (якщо ще нема)
-db.run(`
-  CREATE TABLE IF NOT EXISTS data (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    temperature REAL,
-    humidity REAL,
-    time DATETIME DEFAULT CURRENT_TIMESTAMP
-  )
-`)
-
-// 3️⃣ ESP32 → сюди
-app.post("/api/data", (req, res) => {
-  const { temperature, humidity } = req.body
-
-  db.run(
-    "INSERT INTO data (temperature, humidity) VALUES (?, ?)",
-    [temperature, humidity]
-  )
-
-  res.json({ status: "ok" })
-})
-
-
+// API
 app.get("/api/data", (req, res) => {
-  const data = []
-
-  const now = new Date()
+  // тестові дані
+  const data = [];
+  const now = new Date();
   for (let i = 0; i < 50; i++) {
-    const time = new Date(now - (50 - i) * 60000) // хвилина назад
+    const time = new Date(now - (50 - i) * 60000);
     data.push({
-      time: time.toISOString().slice(11,16), // тільки год:хв
-      temperature: (20 + Math.random() * 5).toFixed(1), // 20–25°C
-      humidity: (50 + Math.random() * 10).toFixed(0)    // 50–60%
-    })
+      time: time.toISOString().slice(11,16),
+      temperature: (20 + Math.random() * 5).toFixed(1),
+      humidity: (50 + Math.random() * 10).toFixed(0)
+    });
   }
+  res.json(data);
+});
 
-  res.json(data)
-})
-
-
-
-app.listen(3000, () => {
-  console.log("http://localhost:3000")
-})
+const PORT = process.env.PORT || 3000; // DigitalOcean використовує змінну PORT
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
