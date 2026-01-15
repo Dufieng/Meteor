@@ -20,5 +20,6 @@ app.get("/api/data", (req, res) => {
 });
 
 const PORT = process.env.PORT || 3000; // DigitalOcean використовує змінну PORT
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+const HOST = process.env.HOST || '0.0.0.0'; // Для cloud hosting потрібно слухати на всіх інтерфейсах
+app.listen(PORT, HOST, () => console.log(`Server running on ${HOST}:${PORT}`));
 
