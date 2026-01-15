@@ -1,0 +1,12 @@
+name: meteor
+services:
+- name: web
+  github:
+    repo: Dufieng/Meteor
+    branch: main
+  run_command: npm start
+  environment_slug: node-js
+  instance_count: 1
+  instance_size_slug: basic-xxs
+  routes:
+  - path: /
