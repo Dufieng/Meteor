@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Meteor</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<h1>My espMeteor</h1>
+<ul id="list"></ul>
+
+<script>
+fetch("/api/data")
+  .then(r => r.json())
+  .then(data => {
+    data.reverse() // щоб час ішов зліва направо
+
+    const labels = data.map(d => d.time)
+    const temps = data.map(d => d.temperature)
+
+    new Chart(document.getElementById("chart"), {
+      type: "line",
+      data: {
+        labels: labels,
+        datasets: [{
+          label: "Температура °C",
+          data: temps
+        }]
+      }
+    })
+  })
+</script>
+
+
+
+<canvas id="chart"></canvas>
+
+
+</body>
+</html>
+
