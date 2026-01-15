@@ -27,11 +27,11 @@ app.get("/api/data", (req, res) => {
 });
 
 // Статичні файли після API
-app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(path.join(__dirname, "views")));
 
 // Fallback для SPA (тільки для не-API шляхів)
 app.get(/^(?!\/api).*/, (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "index.html"));
+  res.sendFile(path.join(__dirname, "views", "index.html"));
 });
 
 const PORT = process.env.PORT || 3000; // DigitalOcean використовує змінну PORT
