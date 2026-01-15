@@ -2,9 +2,8 @@ const express = require("express");
 const path = require("path");
 const app = express();
 app.use(express.json());
-app.use(express.static(path.join(__dirname, "public"))); // віддає сайт
 
-// API
+// API routes ПЕРЕД статичними файлами
 app.get("/api/data", (req, res) => {
   // тестові дані
   const data = [];
@@ -19,6 +18,9 @@ app.get("/api/data", (req, res) => {
   }
   res.json(data);
 });
+
+// Статичні файли після API
+app.use(express.static(path.join(__dirname, "public")));
 
 const PORT = process.env.PORT || 3000; // DigitalOcean використовує змінну PORT
 const HOST = process.env.HOST || '0.0.0.0'; // Для cloud hosting потрібно слухати на всіх інтерфейсах
